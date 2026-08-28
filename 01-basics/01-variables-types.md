@@ -35,7 +35,7 @@ void main() {
   imie = 'Bartek'; // OK — nowa wartość tego samego typu
   // imie = 42;    // Błąd kompilacji — nie można przypisać int do String
 
-  print('$imie ma $wiek lat'); // Anna ma 28 lat
+  print('$imie ma $wiek lat');
 }
 // Oczekiwane wyjście:
 // Bartek ma 28 lat
