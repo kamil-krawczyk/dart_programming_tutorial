@@ -176,6 +176,42 @@ void main() {
 // Ponownie: 42
 ```
 
+#### Porównanie momentu inicjalizacji: `final` vs `late final`
+
+Kluczowa różnica polega na tym, **kiedy** następuje ewaluacja wyrażenia inicjalizującego. Zmienna `final` jest obliczana natychmiast w momencie deklaracji, natomiast `late final` odkłada obliczenie do pierwszego odczytu:
+
+```dart
+int _oblicz(String skad) {
+  print('Obliczam ($skad)...');
+  return 42;
+}
+
+void main() {
+  print('--- final lokalne ---');
+  final a = _oblicz('final'); // oblicza się TERAZ — w momencie deklaracji
+  print('Przed odczytem a');
+  print('Wynik: $a');
+
+  print('');
+  print('--- late final lokalne ---');
+  late final b = _oblicz('late final'); // oblicza się dopiero przy pierwszym odczycie
+  print('Przed odczytem b');
+  print('Wynik: $b'); // dopiero tu następuje wywołanie _oblicz('late final')
+}
+// Oczekiwane wyjście:
+// --- final lokalne ---
+// Obliczam (final)...
+// Przed odczytem a
+// Wynik: 42
+//
+// --- late final lokalne ---
+// Przed odczytem b
+// Obliczam (late final)...
+// Wynik: 42
+```
+
+Zauważ kolejność wypisywanych komunikatów — przy `final` komunikat "Obliczam" pojawia się **przed** "Przed odczytem", a przy `late final` — **po**. To oznacza, że `late` jest idealny do kosztownych inicjalizacji, które mogą nigdy nie być potrzebne.
+
 ---
 
 ## Wbudowane typy danych
