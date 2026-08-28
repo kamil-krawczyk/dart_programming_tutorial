@@ -778,7 +778,7 @@ void main() {
 
   // Próba modyfikacji listy const — błąd runtime
   try {
-    (listaConst as List<int>).add(4);
+    listaConst.add(4);
   } on UnsupportedError catch (e) {
     print('Lista const: nie można modyfikować ($e)');
   }
