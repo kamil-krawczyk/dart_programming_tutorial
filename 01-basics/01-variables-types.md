@@ -725,10 +725,10 @@ Napisz program, który deklaruje zmienne przechowujące informacje o studencie: 
 ```dart
 void main() {
   final String imie = 'Anna';
-  final int wiek = 22;
-  final double srednia = 4.5;
+  int wiek = 22;
+  double srednia = 4.5;
   var aktywny = true;
-  final przedmioty = ['Matematyka', 'Fizyka'];
+  var przedmioty = ['Matematyka', 'Fizyka'];
 
   var status = aktywny ? 'aktywny' : 'nieaktywny';
 
