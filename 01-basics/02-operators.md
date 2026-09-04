@@ -772,7 +772,7 @@ void main() {
   var config = AppConfig()
     ..name = 'MyApp'
     ..version = '2.0'
-    ..features = [...defaultFeatures, ...?extraFeatures]
+    ..features = [...defaultFeatures, ...extraFeatures]
     ..settings = {...defaultSettings, ...customSettings};
 
   print(config);
