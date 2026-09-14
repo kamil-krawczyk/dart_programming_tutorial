@@ -406,7 +406,6 @@ T Function(T) skomponujWszystkie<T>(List<T Function(T)> funkcje) {
 void main() {
   // Proste funkcje do kompozycji
   int podwoj(int n) => n * 2;
-  int dodajJeden(int n) => n + 1;
   String naString(int n) => 'Wynik: $n';
 
   // Kompozycja: najpierw podwoj, potem naString

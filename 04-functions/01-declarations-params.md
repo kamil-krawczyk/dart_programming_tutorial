@@ -370,7 +370,7 @@ void main() {
 // Oczekiwane wyjście:
 // 15.0
 // 1024
-// Bardzo długi tek...
+// Bardzo długi te...
 ```
 
 ### Kiedy stosować parametry nazwane

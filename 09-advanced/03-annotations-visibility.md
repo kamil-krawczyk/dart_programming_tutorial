@@ -42,14 +42,15 @@ W drugiej części modułu przejdziemy do **widoczności bibliotek** — czyli s
 
 Najczęściej używana adnotacja to `@override`. Umieszczamy ją nad składową, która przesłania składową z klasy nadrzędnej lub interfejsu. Dzięki niej analizator zgłosi błąd, jeśli literówka sprawi, że metoda niczego nie przesłania.
 
-Adnotacja `@Deprecated('komunikat')` oznacza element jako przestarzały — analizator wyświetli ostrzeżenie w każdym miejscu jego użycia, wraz z podanym komunikatem migracyjnym. (Istnieje też stała `@deprecated` bez komunikatu, ale zalecana jest forma z komunikatem.)
+Adnotacja `@Deprecated('komunikat')` oznacza element jako przestarzały. Domyślnie analizator zgłasza ostrzeżenie tylko wtedy, gdy przestarzały element jest używany **z innego pakietu** niż ten, w którym go zadeklarowano — użycie w tym samym pakiecie (np. w tym samym pliku, jak w przykładzie niżej) nie generuje ostrzeżenia, chyba że włączysz opcjonalną regułę lintera `deprecated_member_use_from_same_package`. (Istnieje też stała `@deprecated` bez komunikatu, ale zalecana jest forma z komunikatem.)
 
 Poniższy przykład pokazuje `@override` przy przesłanianiu metody oraz `@Deprecated` na starej metodzie, którą chcemy wycofać.
 
 ```dart
 class Repozytorium {
-  // @Deprecated oznacza metodę jako przestarzałą; użycie wywoła ostrzeżenie
-  // analizatora z podanym komunikatem migracyjnym.
+  // @Deprecated oznacza metodę jako przestarzałą. Ostrzeżenie analizatora
+  // (z podanym komunikatem migracyjnym) pojawi się przy użyciu z INNEGO
+  // pakietu — w tym samym pakiecie (jak w main() poniżej) domyślnie go nie ma.
   @Deprecated('Użyj metody zapisz() zamiast tej metody')
   void save() => print('stara metoda save()');
 
@@ -66,8 +67,9 @@ void main() {
   final repo = RepozytoriumPlikowe();
   repo.zapisz(); // wywołanie przesłoniętej metody
 
-  // Wywołanie save() nadal działa, ale analizator zgłasza ostrzeżenie
-  // "'save' is deprecated and shouldn't be used."
+  // Wywołanie save() nadal działa. Ostrzeżenie "'save' is deprecated and
+  // shouldn't be used." pojawiłoby się, gdyby ktoś wywołał save() z innego
+  // pakietu — tutaj, w tym samym pliku, `dart analyze` nie zgłosi problemu.
   repo.save();
 }
 // Oczekiwane wyjście:

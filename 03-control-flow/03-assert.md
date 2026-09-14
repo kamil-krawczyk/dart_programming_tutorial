@@ -78,18 +78,20 @@ void main() {
 
 ## Tryb debug vs tryb produkcyjny
 
-Kluczowa cecha `assert`: asercje są aktywne **wyłącznie w trybie debug**. W trybie produkcyjnym instrukcje `assert` są całkowicie ignorowane — nie wpływają na wydajność ani zachowanie aplikacji.
+Kluczowa cecha `assert`: asercje są aktywne **tylko wtedy, gdy zostaną jawnie włączone**. W standardowym uruchomieniu z linii poleceń (`dart run` bez dodatkowych flag) asercje są **domyślnie wyłączone** — trzeba dodać flagę `--enable-asserts`. Flutter jest tu wyjątkiem: `flutter run` w trybie debug włącza asercje automatycznie. W skompilowanym kodzie produkcyjnym (`dart compile exe`, `flutter run --release`) asercji nie da się włączyć w ogóle — są całkowicie ignorowane i nie wpływają na wydajność ani zachowanie aplikacji.
 
 ### Kiedy asercje są aktywne?
 
 | Środowisko | Assert aktywny? | Uwagi |
 |-----------|-----------------|-------|
-| `dart run` | ✓ Tak | Domyślny tryb uruchamiania |
+| `dart run` | ✗ Nie | Domyślnie wyłączone przy zwykłym uruchomieniu |
 | `dart run --enable-asserts` | ✓ Tak | Jawne włączenie |
 | `flutter run` (debug) | ✓ Tak | Domyślny tryb Flutter debug |
-| `dart compile exe` | ✗ Nie | Kompilacja produkcyjna |
+| `dart compile exe` | ✗ Nie | Kompilacja produkcyjna — nie da się włączyć |
 | `flutter run --release` | ✗ Nie | Flutter release mode |
-| `dart run --no-enable-asserts` | ✗ Nie | Jawne wyłączenie |
+| `dart run --no-enable-asserts` | ✗ Nie | Jawne wyłączenie (i tak już domyślne) |
+
+> **Uwaga:** aby samodzielnie zobaczyć `AssertionError` z przykładów w tym module, uruchamiaj je jako `dart run --enable-asserts plik.dart` — samo `dart run plik.dart` nie aktywuje asercji.
 
 ### Demonstracja zachowania w różnych trybach
 
@@ -382,7 +384,7 @@ Napisz klasę `Macierz2x2` reprezentującą macierz 2×2. Konstruktor przyjmuje 
 | Wejście | Oczekiwane wyjście |
 |---------|-------------------|
 | `Macierz2x2(1, 2, 3, 4).wyznacznik()` | `-2.0` |
-| `Macierz2x2(1, 0, 0, 1).odwrotna()` | `[1.0, 0.0; 0.0, 1.0]` (macierz jednostkowa) |
+| `Macierz2x2(1, 0, 0, 1).odwrotna()` | `[1.0, -0.0; -0.0, 1.0]` (macierz jednostkowa; `-0.0` to artefakt arytmetyki zmiennoprzecinkowej przy dzieleniu `-0/1`) |
 
 ### Wskazówki
 

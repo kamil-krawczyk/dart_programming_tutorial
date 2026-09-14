@@ -377,6 +377,7 @@ void main() {
 
   // Jawna deklaracja z typem
   List<int> liczby = [10, 20, 30];
+  print(liczby); // [10, 20, 30]
 
   // Dostęp i modyfikacja
   print(owoce[0]);         // jabłko — pierwszy element
@@ -388,6 +389,7 @@ void main() {
   print('Zawiera banan: ${owoce.contains("banan")}');
 }
 // Oczekiwane wyjście:
+// [10, 20, 30]
 // jabłko
 // [jabłko, awokado, banan, czereśnia, daktyl]
 // Długość: 5
@@ -431,6 +433,7 @@ void main() {
 
   // Jawna deklaracja
   Set<int> primes = {2, 3, 5, 7, 11};
+  print(primes); // {2, 3, 5, 7, 11}
 
   unikalne.add('Go');
   unikalne.add('Dart'); // ignorowane — już istnieje
@@ -440,6 +443,7 @@ void main() {
   print('Liczba: ${unikalne.length}');
 }
 // Oczekiwane wyjście:
+// {2, 3, 5, 7, 11}
 // {Dart, Java, Python, Go}
 // Zawiera Java: true
 // Liczba: 4
@@ -621,11 +625,15 @@ void main() {
   // nazwa = 42; // Błąd: A value of type 'int' can't be assigned to a variable of type 'String'
 
   print(nazwa.runtimeType);  // String
+  print(liczba.runtimeType); // int
+  print(pi.runtimeType);     // double
   print(lista.runtimeType);  // List<int>
   print(mapa.runtimeType);   // _Map<String, int>
 }
 // Oczekiwane wyjście:
 // String
+// int
+// double
 // List<int>
 // _Map<String, int>
 ```

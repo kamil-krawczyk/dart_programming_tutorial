@@ -186,15 +186,26 @@ void main() {
 Drugi przykład ilustruje niedozwolone użycie `implements` na klasie `base` z innej biblioteki oraz poprawną alternatywę przez `extends`.
 
 ```dart
-// Zakładamy, że Repozytorium pochodzi z INNEJ biblioteki i jest base.
-// base class Repozytorium { ... }
+// Poniżej Repozytorium jest zdefiniowane w tym samym pliku tylko dla
+// kompletności przykładu — reguła opisana niżej dotyczy sytuacji, w której
+// Repozytorium pochodzi z INNEJ biblioteki niż kod, który próbuje go użyć.
+base class Repozytorium {
+  final List<String> _log = [];
 
-// BŁĄD: nie można implements klasy base spoza jej biblioteki
+  void zapiszLog(String akcja) {
+    _log.add(akcja);
+  }
+
+  int get liczbaOperacji => _log.length;
+}
+
+// BŁĄD (gdyby Repozytorium pochodziło z innej biblioteki):
+// nie można implements klasy base spoza jej biblioteki
 // base class BlednaImplementacja implements Repozytorium {}
 // error: The class 'Repozytorium' can't be implemented outside of its library
 // because it's a base class.
 
-// POPRAWNIE: dziedziczenie przez extends
+// POPRAWNIE: dziedziczenie przez extends działa niezależnie od biblioteki
 base class PoprawnaSubklasa extends Repozytorium {
   void wykonaj() => zapiszLog('operacja');
 }
@@ -257,10 +268,17 @@ void main() {
 Drugi przykład pokazuje niedozwolone `extends` na klasie `interface` z innej biblioteki wraz z poprawnym `implements`.
 
 ```dart
-// Zakładamy, że Loger pochodzi z INNEJ biblioteki i jest interface.
-// interface class Loger { void loguj(String m) {} }
+// Poniżej Loger jest zdefiniowany w tym samym pliku tylko dla kompletności
+// przykładu — reguła opisana niżej dotyczy sytuacji, w której Loger pochodzi
+// z INNEJ biblioteki niż kod, który próbuje go rozszerzyć.
+interface class Loger {
+  void loguj(String wiadomosc) {
+    print('[LOG] $wiadomosc');
+  }
+}
 
-// BŁĄD: nie można extends klasy interface spoza jej biblioteki
+// BŁĄD (gdyby Loger pochodził z innej biblioteki):
+// nie można extends klasy interface spoza jej biblioteki
 // class BlednyLoger extends Loger {}
 // error: The class 'Loger' can't be extended outside of its library
 // because it's an interface class.
@@ -313,15 +331,27 @@ void main() {
 Drugi przykład demonstruje niedozwolone rozszerzanie klasy `final` z innej biblioteki.
 
 ```dart
-// Zakładamy, że Konfiguracja pochodzi z INNEJ biblioteki i jest final.
-// final class Konfiguracja { ... }
+// Poniżej Konfiguracja jest zdefiniowana w tym samym pliku tylko dla
+// kompletności przykładu — reguła opisana niżej dotyczy sytuacji, w której
+// Konfiguracja pochodzi z INNEJ biblioteki niż kod, który próbuje ją rozszerzyć
+// lub zaimplementować.
+final class Konfiguracja {
+  final String srodowisko;
+  final int limitPolaczen;
 
-// BŁĄD: nie można extends klasy final spoza jej biblioteki
+  Konfiguracja({required this.srodowisko, required this.limitPolaczen});
+
+  bool get produkcyjne => srodowisko == 'prod';
+}
+
+// BŁĄD (gdyby Konfiguracja pochodziła z innej biblioteki):
+// nie można extends klasy final spoza jej biblioteki
 // class RozszerzonaKonf extends Konfiguracja {}
 // error: The class 'Konfiguracja' can't be extended outside of its library
 // because it's a final class.
 
-// BŁĄD: nie można też implements klasy final spoza jej biblioteki
+// BŁĄD (gdyby Konfiguracja pochodziła z innej biblioteki):
+// nie można też implements klasy final spoza jej biblioteki
 // class UdawanaKonf implements Konfiguracja {}
 // error: The class 'Konfiguracja' can't be implemented outside of its library
 // because it's a final class.

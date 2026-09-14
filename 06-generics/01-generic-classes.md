@@ -136,7 +136,7 @@ void main() {
 ```dart
 // Set<T> — kolekcja unikalnych elementów, ignoruje duplikaty
 void main() {
-  Set<int> liczby = {1, 2, 2, 3, 3, 3};
+  Set<int> liczby = [1, 2, 2, 3, 3, 3].toSet();
   print('Zbiór: $liczby'); // duplikaty usunięte
 
   liczby.add(4);

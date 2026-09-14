@@ -86,8 +86,16 @@ Dart rozróżnia dwa rodzaje strumieni, które fundamentalnie różnią się sem
 Poniższy przykład demonstruje ograniczenie strumienia single-subscription: próba drugiej subskrypcji kończy się wyjątkiem.
 
 ```dart
+import 'dart:async';
+
 void main() {
-  final strumien = Stream<int>.fromIterable([1, 2, 3]);
+  // Uwaga: Stream.fromIterable jest zaimplementowany przez Stream.multi
+  // i DOPUSZCZA wielu słuchaczy (każdy dostaje własne, niezależne odtworzenie
+  // elementów) — nie nadaje się więc do demonstracji klasycznego rzucania
+  // wyjątku. StreamController.stream jest prawdziwym strumieniem
+  // single-subscription.
+  final controller = StreamController<int>();
+  final strumien = controller.stream;
 
   strumien.listen((v) => print('Słuchacz 1: $v')); // pierwsza subskrypcja OK
 
@@ -97,6 +105,11 @@ void main() {
   } catch (e) {
     print('Błąd: ${e.runtimeType}');
   }
+
+  controller.add(1);
+  controller.add(2);
+  controller.add(3);
+  controller.close();
 }
 // Oczekiwane wyjście:
 // Błąd: StateError
@@ -605,13 +618,13 @@ void main() async {
 // Odebrano: 1
 // --- pause ---
 // --- resume ---
-// Odebrano: 5
-// Odebrano: 6
+// Odebrano: 2
+// Odebrano: 3
 // --- cancel ---
 // Koniec programu
 ```
 
-Podczas `pause` strumień `Stream.periodic` nadal odmierza czas, więc po `resume` numery zdarzeń "przeskakują". Kluczowa obserwacja: między `pause` a `resume` **żadne zdarzenie nie dociera do callbacku**, a po `cancel` subskrypcja jest martwa — dalsze zdarzenia są ignorowane.
+`Stream.periodic` reaguje na `pause`/`resume` swojego subskrybenta: wewnętrzny `Timer` jest **zatrzymywany** na czas pauzy i wznawiany z uwzględnieniem czasu, jaki upłynął od ostatniego zdarzenia przed pauzą. Dlatego żadne "tyknięcia" nie giną ani się nie kumulują — numeracja zdarzeń kontynuuje się bez przeskoków (`0, 1`, pauza, `2, 3, ...`). Kluczowa obserwacja: między `pause` a `resume` **żadne zdarzenie nie dociera do callbacku** (generowanie zdarzeń jest wstrzymane u źródła), a po `cancel` subskrypcja jest martwa — dalsze zdarzenia są ignorowane.
 
 ---
 
@@ -836,7 +849,10 @@ Stream<int> bezpiecznePrzetwarzanie(Stream<String> wejscie) {
       .map((s) => int.parse(s))   // rzuca FormatException dla błędnych danych
       .handleError((e) {
     // handleError przechwytuje błąd i pozwala kontynuować strumień
-    print('Pominięto błędny element: $e');
+    // (source zamiast pełnego $e, bo toString FormatException zawiera
+    // wieloliniowy fragment z pozycją błędu)
+    final blad = e as FormatException;
+    print('Pominięto błędny element: ${blad.runtimeType}: ${blad.source}');
   }, test: (e) => e is FormatException);
 }
 

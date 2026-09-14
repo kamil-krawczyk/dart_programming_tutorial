@@ -389,8 +389,6 @@ Następnie napisz generator `zakresPotek(int podstawa, int minWartosc, int maxWa
 <summary>Rozwiązanie referencyjne</summary>
 
 ```dart
-import 'dart:math' as math;
-
 /// Generator nieskończonej sekwencji potęg danej podstawy.
 /// Produkuje: podstawa^0, podstawa^1, podstawa^2, ...
 Iterable<int> potegi(int podstawa) sync* {

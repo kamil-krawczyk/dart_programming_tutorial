@@ -448,6 +448,7 @@ void main() {
 // Konstruktory zbioru, operacje mnogościowe i deduplikacja (O(1) średnio)
 void main() {
   // Literał zbioru oraz konstruktor Set.from
+  // ignore: equal_elements_in_set
   var a = <int>{1, 2, 3, 3, 2}; // duplikaty są ignorowane
   var b = Set<int>.from([3, 4, 5]);
   print('Zbiór a: $a'); // {1, 2, 3}

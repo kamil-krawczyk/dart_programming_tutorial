@@ -210,7 +210,7 @@ Future<void> main() async {
 }
 // Przykładowe wyjście (nazwa katalogu jest losowa):
 // Utworzono katalog: /tmp/demo_XXXXXX
-// Wpis: /tmp/demo_XXXXXX/dane.txt (typ: FileSystemEntityType.file)
+// Wpis: /tmp/demo_XXXXXX/dane.txt (typ: file)
 // Katalog istnieje po usunięciu: false
 ```
 
@@ -358,7 +358,7 @@ Future<void> main() async {
 
 ### 6.2 `Process.start` — strumieniowanie wyjścia
 
-Dla procesów, które produkują wyjście stopniowo, używamy `Process.start` i słuchamy strumieni `stdout`/`stderr` na bieżąco. `exitCode` jest tu `Future`, na które czekamy po przetworzeniu wyjścia.
+Dla procesów, które produkują wyjście stopniowo, używamy `Process.start` i słuchamy strumieni `stdout`/`stderr` na bieżąco. `exitCode` jest tu `Future`, które kończy się, gdy proces zakończy działanie — **niekoniecznie** gdy cały jego `stdout` zostanie już odebrany i przetworzony. Aby zagwarantować kolejność wypisywanych linii, czekamy dodatkowo na zakończenie przetwarzania strumienia (np. przez `forEach`, które zwraca `Future` kończące się po jego wyczerpaniu).
 
 ```dart
 import 'dart:convert';
@@ -369,13 +369,17 @@ Future<void> main() async {
   final proces = await Process.start('sh', ['-c', 'echo linia1; echo linia2']);
 
   // Dekodujemy i dzielimy strumień stdout na linie w czasie rzeczywistym.
-  proces.stdout
+  // forEach zwraca Future, które kończy się dopiero po wyczerpaniu strumienia.
+  final przetworzoneWyjscie = proces.stdout
       .transform(utf8.decoder)
       .transform(const LineSplitter())
-      .listen((linia) => print('OUT> $linia'));
+      .forEach((linia) => print('OUT> $linia'));
 
   // exitCode to Future — czekamy na zakończenie procesu.
   final kod = await proces.exitCode;
+  // Dodatkowo czekamy, aż cały stdout zostanie odebrany i wypisany — inaczej
+  // kolejność linii względem komunikatu końcowego nie byłaby gwarantowana.
+  await przetworzoneWyjscie;
   print('Proces zakończony, kod: $kod');
 }
 // Oczekiwane wyjście (kolejność linii OUT> zachowana):

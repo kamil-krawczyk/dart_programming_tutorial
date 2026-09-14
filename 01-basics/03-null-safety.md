@@ -51,12 +51,15 @@ void main() {
 Hierarchia typów z null safety:
 
 ```dart
+// Zwraca String? — kompilator nie wie, że w praktyce nigdy nie zwróci null
+String? pobierzWartosc(String w) => w;
+
 void main() {
   // Każdy typ T ma swój odpowiednik nullable T?
   // T jest podtypem T?, ale T? NIE jest podtypem T
 
   String tekst = 'hello';
-  String? nullableTekst = tekst; // OK — String jest podtypem String?
+  String? nullableTekst = pobierzWartosc(tekst); // OK — String jest podtypem String?
 
   // String innyTekst = nullableTekst; // Błąd kompilacji!
   // Nie można przypisać String? do String bez sprawdzenia null
@@ -156,10 +159,10 @@ void main() {
 
   // Łańcuch ?. — bezpieczne zagnieżdżone wywołania
   List<String>? lista = ['a', 'b', 'c'];
-  print(lista?.first?.toUpperCase()); // A
+  print(lista?.first.toUpperCase()); // A
 
   lista = null;
-  print(lista?.first?.toUpperCase()); // null
+  print(lista?.first.toUpperCase()); // null
 }
 // Oczekiwane wyjście:
 // 10
@@ -519,12 +522,13 @@ Ograniczenia type promotion — nie działa w każdym kontekście:
 
 ```dart
 class Kontener {
-  String? _wartosc;
+  String? _wartosc; // pole MODYFIKOWALNE (nie final)
 
   void ustaw(String w) => _wartosc = w;
 
   void wypisz() {
-    // Pola instancji NIE są promowane (mogą być zmienione z zewnątrz)
+    // Modyfikowalne pola instancji NIE są promowane (mogą być zmienione z zewnątrz,
+    // np. z innej metody albo między sprawdzeniem a użyciem)
     // if (_wartosc != null) {
     //   print(_wartosc.length); // Błąd! Pole może być zmienione między sprawdzeniem a użyciem
     // }
@@ -545,6 +549,8 @@ void main() {
 // Oczekiwane wyjście:
 // 4
 ```
+
+> Od Dart 3.2 kompilator potrafi promować także **prywatne pola `final`** bez własnego gettera (tzw. field promotion), ponieważ taka wartość nie może się już zmienić po inicjalizacji. Powyższe ograniczenie dotyczy więc przede wszystkim pól modyfikowalnych (bez `final`), jak `_wartosc` w przykładzie.
 
 ---
 

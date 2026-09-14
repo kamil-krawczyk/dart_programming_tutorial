@@ -61,7 +61,7 @@ void main() {
 
 ### `switch` z typem enum
 
-Instrukcja `switch` jest szczególnie przydatna z typami wyliczeniowymi — Dart ostrzega gdy nie obsłużymy wszystkich wartości enum:
+Instrukcja `switch` jest szczególnie przydatna z typami wyliczeniowymi — jeśli `switch` bez `default` nie obsłuży wszystkich wartości enum, Dart zgłasza to jako błąd kompilacji (nie tylko ostrzeżenie):
 
 ```dart
 enum StatusZamowienia { nowe, wRealizacji, wyslane, dostarczone, anulowane }
@@ -288,7 +288,7 @@ void main() {
       'Temperatura prawidłowa: ${t}°C',
     (wartosc: var t, jednostka: 'C') =>
       'Hipotermia: ${t}°C',
-    (wartosc: var t, jednostka: var j) =>
+    (wartosc: _, jednostka: var j) =>
       'Nieobsługiwana jednostka: $j',
   };
 
@@ -315,7 +315,7 @@ void main() {
   for (var z in zamowienia) {
     var rabat = switch (z) {
       (kwota: var k, premium: true) when k > 100 => '20% rabatu',
-      (kwota: var k, premium: true) => '10% rabatu (premium)',
+      (kwota: _, premium: true) => '10% rabatu (premium)',
       (kwota: var k, premium: false) when k > 200 => '15% rabatu',
       (kwota: var k, premium: false) when k > 100 => '5% rabatu',
       _ => 'brak rabatu',

@@ -54,17 +54,8 @@ Dart pozwala łączyć warunki za pomocą operatorów logicznych `&&` (AND) i `|
 
 ```dart
 void main() {
-  var wiek = 20;
-  var maLegitymacje = true;
-
   // Łączenie warunków operatorami logicznymi
-  if (wiek >= 18 && maLegitymacje) {
-    print('Wstęp dozwolony');
-  } else if (wiek >= 18 && !maLegitymacje) {
-    print('Potrzebna legitymacja');
-  } else {
-    print('Wstęp zabroniony — wymagany wiek 18+');
-  }
+  sprawdzWstep(20, true);
 
   // Warunek z operatorem || (OR)
   var dzien = 'sobota';
@@ -72,6 +63,16 @@ void main() {
     print('Weekend!');
   } else {
     print('Dzień roboczy');
+  }
+}
+
+void sprawdzWstep(int wiek, bool maLegitymacje) {
+  if (wiek >= 18 && maLegitymacje) {
+    print('Wstęp dozwolony');
+  } else if (wiek >= 18 && !maLegitymacje) {
+    print('Potrzebna legitymacja');
+  } else {
+    print('Wstęp zabroniony — wymagany wiek 18+');
   }
 }
 // Oczekiwane wyjście:

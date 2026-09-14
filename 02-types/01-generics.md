@@ -58,9 +58,10 @@ Poniższy przykład demonstruje użycie `Set<T>` z typem generycznym:
 ```dart
 void main() {
   // Set<T> — zbiór unikalnych elementów typu T
-  Set<int> unikalneLiczby = {1, 2, 3, 2, 1};
+  Set<int> unikalneLiczby = {1, 2, 3};
   unikalneLiczby.add(4);
   unikalneLiczby.add(2); // ignorowane — już istnieje
+  unikalneLiczby.add(1); // ignorowane — już istnieje
 
   Set<String> tagi = {'dart', 'flutter', 'programowanie'};
 

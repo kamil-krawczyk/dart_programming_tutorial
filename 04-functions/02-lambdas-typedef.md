@@ -97,7 +97,7 @@ void main() {
   print(wynik);
 }
 // Oczekiwane wyjście:
-// [CZEREŚNIA, DAKTYL]
+// [JABŁKO, CZEREŚNIA, DAKTYL]
 ```
 
 ### Lambdy bez parametrów
@@ -386,8 +386,6 @@ Napisz program, który implementuje prosty kalkulator operacji na listach. Zdefi
 <summary>Rozwiązanie referencyjne</summary>
 
 ```dart
-import 'dart:math' show min, max;
-
 typedef OperacjaListy = int Function(List<int> liczby);
 
 void main() {

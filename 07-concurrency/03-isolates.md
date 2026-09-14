@@ -54,7 +54,8 @@ void main() {
 }
 // Oczekiwane wyjście (kolejność):
 // Start obliczeń
-// Wynik: 333333338333333350000000
+// Wynik: 672921401752298880 (suma matematyczna 333333338333333350000000
+// przepełnia 64-bitowy int i "zawija się" — Dart nie rzuca tu wyjątku)
 // Future: pętla zdarzeń jest znów wolna
 ```
 

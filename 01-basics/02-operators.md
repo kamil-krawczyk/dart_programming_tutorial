@@ -26,7 +26,7 @@ Dart ewaluuje operatory zgodnie z ich priorytetem — operatory o wyższym prior
 
 | Priorytet | Kategoria | Operatory |
 |-----------|-----------|-----------|
-| 16 | Jednoargumentowe (postfix) | `e++`, `e--`, `()`, `[]`, `?.`, `.`, `!` |
+| 16 | Jednoargumentowe (postfix) | `e++`, `e--`, `()`, `[]`, `?[]`, `?.`, `.`, `!` |
 | 15 | Jednoargumentowe (prefix) | `-e`, `!e`, `~e`, `++e`, `--e`, `await` |
 | 14 | Multiplikatywne | `*`, `/`, `~/`, `%` |
 | 13 | Addytywne | `+`, `-` |
@@ -162,7 +162,7 @@ void main() {
 
 ## Operatory relacyjne
 
-Operatory relacyjne porównują wielkości i zwracają wartość `bool`. Działają na typach implementujących `Comparable`.
+Operatory relacyjne porównują wielkości i zwracają wartość `bool`. Są zdefiniowane m.in. dla typu `num` (`int`, `double`). Implementowanie interfejsu `Comparable` (jak robi to np. `String` czy `DateTime`) nie daje automatycznie operatorów `<`, `>`, `<=`, `>=` — trzeba wtedy użyć metody `compareTo()`.
 
 ```dart
 void main() {
@@ -409,8 +409,10 @@ void main() {
   print('x >> 1 = ${x >> 1}');  // 7 (00000111)
 
   // >>> — przesunięcie w prawo bez znaku (unsigned shift)
+  // Dart int to liczba 64-bitowa, więc -1 to 64 jedynki — po przesunięciu
+  // o 28 bitów zostaje 36 jedynek, czyli 2^36 - 1
   var neg = -1;
-  print('neg >>> 28 = ${neg >>> 28}'); // 15 (zeruje bity znaku)
+  print('neg >>> 28 = ${neg >>> 28}'); // 68719476735 (zeruje bity znaku, 64-bit)
 
   // Praktyczne użycie — flagi bitowe
   const read = 1 << 0;    // 001 = 1
@@ -424,7 +426,7 @@ void main() {
 // Oczekiwane wyjście:
 // x << 2 = 60
 // x >> 1 = 7
-// neg >>> 28 = 15
+// neg >>> 28 = 68719476735
 // Ma odczyt: true
 // Ma wykonanie: false
 ```
